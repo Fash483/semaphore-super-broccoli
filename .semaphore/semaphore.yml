@@ -1,9 +1,13 @@
-version: 2.1
-
+version: v1.0
+name: ''
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu2004
 jobs:
   build:
     docker:
-      - image: cimg/node:18.17
+      - image: 'cimg/node:18.17'
     steps:
       - checkout
       - run:
@@ -12,10 +16,9 @@ jobs:
       - run:
           name: Build project
           command: npm run build
-
   download_and_upload:
     docker:
-      - image: cimg/node:18.17
+      - image: 'cimg/node:18.17'
     steps:
       - checkout
       - run:
@@ -76,10 +79,10 @@ jobs:
           name: Run the recursive upload script
           command: |
             python3 upload_files_recursive.py
-
 workflows:
   version: 2
   upload_workflow:
     jobs:
       - build
       - download_and_upload
+blocks: []
