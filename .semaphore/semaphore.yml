@@ -21,7 +21,7 @@ blocks:
             - npm install webtorrent-cli
             - echo "Downloading torrent..."
             - mkdir downloads
-            - npx webtorrent download "magnet:?xt=urn:btih:612A7F4F112B919CEDB99B3AF0879F59E6B9C021&dn=Squid.Game.S03.1080p.NF.WEB-DL.DUAL.DDP5.1.Atmos.H.265-Spidey%20%20%20%20%20%20%20%20&tr=udp://tracker.bittor.pw:1337/announce%20%20%20%20%20%20%20%20&tr=udp://tracker.opentrackr.org:1337/announce%20%20%20%20%20%20%20%20&tr=udp://tracker.dler.org:6969/announce%20%20%20%20%20%20%20%20&tr=udp://open.stealth.si:80/announce%20%20%20%20%20%20%20%20&tr=udp://tracker.torrent.eu.org:451/announce%20%20%20%20%20%20%20%20&tr=udp://exodus.desync.com:6969/announce%20%20%20%20%20%20%20%20&tr=udp://open.demonii.com:1337/announce" --out downloads
+            - npx webtorrent download "magnet:?xt=urn:btih:b742eecc8178be5b76b4e1f881a78cdf3b942ec2&dn=Heads%20of%20State%202025%20720p%20AMZN%20WEB-DL%20DDP5%201%20Atmos%20H%20264-FLUX&tr=udp://tracker.bittor.pw:1337/announce&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://tracker.dler.org:6969/announce&tr=udp://open.stealth.si:80/announce&tr=udp://tracker.torrent.eu.org:451/announce&tr=udp://exodus.desync.com:6969/announce&tr=udp://open.demonii.com:1337/announce" --out downloads
             - echo "Uploading files to Filebin..."
             - |
               cat << 'EOF' > upload_files.py
