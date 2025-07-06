@@ -1,6 +1,6 @@
 version: v1.0
 
-name: Download Torrent and Upload to Filebin
+name: Download Torrent and Upload to PixelDrain
 
 agent:
   machine:
@@ -10,64 +10,30 @@ agent:
 blocks:
   - name: Download & Upload
     task:
+      env_vars:
+        - name: PIXELDRAIN_API_KEY
+          value: 5f45f184-64bb-4eaa-be19-4a5f0459db49   # 🔐 Replace with your actual key
+        - name: TORRENT_MAGNET
+          value: "magnet:?xt=urn:btih:..."              # 🔗 Replace with your magnet link
       jobs:
         - name: Download and Upload Files
           commands:
             - checkout
-            - echo "Installing dependencies..."
+            - echo "📦 Installing webtorrent-cli..."
             - sudo apt update
-            - sudo apt install -y nodejs npm python3
-            - pip install requests
+            - sudo apt install -y nodejs npm
             - npm install webtorrent-cli
-            - echo "Downloading torrent..."
+
+            - echo "📥 Downloading torrent..."
             - mkdir downloads
-            - npx webtorrent download "magnet:?xt=urn:btih:b742eecc8178be5b76b4e1f881a78cdf3b942ec2&dn=Heads%20of%20State%202025%20720p%20AMZN%20WEB-DL%20DDP5%201%20Atmos%20H%20264-FLUX&tr=udp://tracker.bittor.pw:1337/announce&tr=udp://tracker.opentrackr.org:1337/announce&tr=udp://tracker.dler.org:6969/announce&tr=udp://open.stealth.si:80/announce&tr=udp://tracker.torrent.eu.org:451/announce&tr=udp://exodus.desync.com:6969/announce&tr=udp://open.demonii.com:1337/announce" --out downloads
-            - echo "Uploading files to Filebin..."
+            - npx webtorrent "magnet:?xt=urn:btih:8be57821c162e501d9cf7f66a5ab21492487fe06&dn=Arthur%201996%20Seasons%2021%20to%2025%20Complete%20%2B%20Specials%20TVRip%20x264%20%5Bi_c%5D&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.demonii.com%3A1337%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fexplodie.org%3A6969%2Fannounce&tr=udp%3A%2F%2Fexodus.desync.com%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.theoks.net%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker-udp.gbitt.info%3A80%2Fannounce&tr=udp%3A%2F%2Fwepzone.net%3A6969%2Fannounce&tr=udp%3A%2F%2Fttk2.nbaonlineservice.com%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker2.dler.org%3A80%2Fannounce&tr=udp%3A%2F%2Ftracker.tryhackx.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.therarbg.to%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.srv00.com%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.ololosh.space%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.dump.cl%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.dler.org%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.darkness.services%3A6969%2Fannounce&tr=udp%3A%2F%2Ftracker.bittor.pw%3A1337%2Fannounce&tr=udp%3A%2F%2Ftr4ck3r.duckdns.org%3A6969%2Fannounce&tr=https%3A%2F%2Ftracker.bt4g.com%3A443%2Fannounce" --out downloads
+
+            - echo "📤 Uploading files to PixelDrain..."
             - |
-              cat << 'EOF' > upload_files.py
-              import os
-              import requests
-              import concurrent.futures
+              find downloads -type f | while read file; do
+                echo "Uploading $file..."
+                response=$(curl -s -T "$file" -u :87c2dcc7-5488-46ac-974b-491b939c284d https://pixeldrain.com/api/file/)
+                id=$(echo "$response" | grep -o '"id":"[^"]*"' | cut -d':' -f2 | tr -d '"')
+                echo "✅ $file uploaded: https://pixeldrain.com/u/$id"
+              done
 
-              # Folder containing downloaded files
-              directory = 'downloads'
-              url_template = 'https://filebin.net/justinarohen22/{filename}'  # Replace with your Filebin ID
-
-              # Recursively collect all file paths
-              files_to_upload = []
-              for root, dirs, files in os.walk(directory):
-                  for file in files:
-                      full_path = os.path.join(root, file)
-                      files_to_upload.append(full_path)
-
-              # Upload a single file
-              def upload_file(file_path):
-                  filename = os.path.relpath(file_path, directory)
-                  url = url_template.format(filename=filename.replace(os.sep, '_'))
-
-                  print(f'Uploading {filename} to {url}')
-                  try:
-                      with open(file_path, 'rb') as f:
-                          response = requests.post(
-                              url,
-                              headers={
-                                  'accept': 'application/json',
-                                  'Content-Type': 'application/octet-stream'
-                              },
-                              data=f
-                          )
-                      return response.status_code, filename, response.json()
-                  except Exception as e:
-                      return None, filename, str(e)
-
-              # Concurrent upload
-              with concurrent.futures.ThreadPoolExecutor() as executor:
-                  future_to_file = {executor.submit(upload_file, file): file for file in files_to_upload}
-                  for future in concurrent.futures.as_completed(future_to_file):
-                      try:
-                          status_code, filename, response_data = future.result()
-                          print(f'Uploaded {filename}: Status {status_code}, Response: {response_data}')
-                      except Exception as e:
-                          print(f'Error uploading {future_to_file[future]}: {e}')
-              EOF
-            - python3 upload_files.py
