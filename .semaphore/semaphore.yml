@@ -21,7 +21,7 @@ blocks:
             - checkout
             - echo "📦 Installing webtorrent-cli..."
             - sudo apt update
-            - sudo apt install aria2
+            - sudo apt install aria2 -y
 
             - echo "📥 Downloading torrent..."
             - mkdir downloads
