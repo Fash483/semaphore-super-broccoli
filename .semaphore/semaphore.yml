@@ -1,6 +1,6 @@
 version: v1.0
 
-name: Download Torrent and Upload to Filebin
+name: Download Torrent and Upload to PixelDrain
 
 agent:
   machine:
@@ -10,64 +10,30 @@ agent:
 blocks:
   - name: Download & Upload
     task:
+      env_vars:
+        - name: PIXELDRAIN_API_KEY
+          value: 5f45f184-64bb-4eaa-be19-4a5f0459db49   # 🔐 Replace with your actual key
+        - name: TORRENT_MAGNET
+          value: "magnet:?xt=urn:btih:..."              # 🔗 Replace with your magnet link
       jobs:
         - name: Download and Upload Files
           commands:
             - checkout
-            - echo "Installing dependencies..."
+            - echo "📦 Installing webtorrent-cli..."
             - sudo apt update
-            - sudo apt install -y nodejs npm python3
-            - pip install requests
+            - sudo apt install -y nodejs npm
             - npm install webtorrent-cli
-            - echo "Downloading torrent..."
+
+            - echo "📥 Downloading torrent..."
             - mkdir downloads
-            - npx webtorrent "magnet:?xt=urn:btih:d172dd66637927a58088d67dcc8d8cd7365c5972&dn=Hell%20Motel%20S01E05%20Jailbait%20720p%20AMZN%20WEB-DL%20DDP5%201%20H%20264-RAWR%5BEZTVx.to%5D.mkv%5Beztv%5D&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Fp4p.arenabg.com%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce" "magnet:?xt=urn:btih:0de671a5efbf5ed4c76e9c35d6ba9162185c78ac&dn=Big%20City%20Greens%20S04E47%20Swashbuckled%20720p%20HULU%20WEB-DL%20DDP5%201%20H%20264-NTb%5BEZTVx.to%5D.mkv%5Beztv%5D&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Fp4p.arenabg.com%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce" "magnet:?xt=urn:btih:d798f655301f01a6a201774ab0e8a7a7ea711b85&dn=Big%20City%20Greens%20S04E48%20Nick%20Scouts%20720p%20HULU%20WEB-DL%20DDP5%201%20H%20264-NTb%5BEZTVx.to%5D.mkv%5Beztv%5D&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Fp4p.arenabg.com%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce" "magnet:?xt=urn:btih:9f55741f13df88a26461efb129c34bb6d487e895&dn=Kiff%20S02E29%20Annoying%20Freaky%20Cool%201080p%20HULU%20WEB-DL%20DDP5%201%20H%20264-NTb%5BEZTVx.to%5D.mkv%5Beztv%5D&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Fp4p.arenabg.com%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce" "magnet:?xt=urn:btih:a7b1eb0602882c600d928c36447409d37f920ab1&dn=Crime+Scene+Investigators+S01E12+H+for+the+Holidays+1080p+CRAV+WEB-DL+DDP5+1+H+264-Kitsune%20%20%20%20%20%20%20%20&tr=udp://tracker.bittor.pw:1337/announce%20%20%20%20%20%20%20%20&tr=udp://tracker.opentrackr.org:1337/announce%20%20%20%20%20%20%20%20&tr=udp://tracker.dler.org:6969/announce%20%20%20%20%20%20%20%20&tr=udp://open.stealth.si:80/announce%20%20%20%20%20%20%20%20&tr=udp://tracker.torrent.eu.org:451/announce%20%20%20%20%20%20%20%20&tr=udp://exodus.desync.com:6969/announce%20%20%20%20%20%20%20%20&tr=udp://open.demonii.com:1337/announce" "magnet:?xt=urn:btih:1d9855e54480907dd5efa0b0a5eab51796b7fb3c&dn=Kiff%20S02E28%20Kristophes%20Big%20Day%20Out%201080p%20HULU%20WEB-DL%20DDP5%201%20H%20264-NTb%5BEZTVx.to%5D.mkv%5Beztv%5D&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Fp4p.arenabg.com%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce" "magnet:?xt=urn:btih:e0ab709ff871b070d8d48fe566f55896c531d568&dn=Murder%20By%20Medic%20S04E06%20Niels%20Hogel%201080p%20AMZN%20WEB-DL%20DDP2%200%20H%20264-RAWR%5BEZTVx.to%5D.mkv%5Beztv%5D&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Fp4p.arenabg.com%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce" --out downloads
-            - echo "Uploading files to Filebin..."
+            - npx webtorrent "magnet:?xt=urn:btih:ba9050209c66e25b2d8dc7c8fdba221f749a7108&dn=Murder%20By%20Medic%20S04E05%20Richard%20Sharpe%201080p%20AMZN%20WEB-DL%20DDP2%200%20H%20264-RAWR%5BEZTVx.to%5D.mkv%5Beztv%5D&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337%2Fannounce&tr=udp%3A%2F%2Fp4p.arenabg.com%3A1337%2Fannounce&tr=udp%3A%2F%2Ftracker.torrent.eu.org%3A451%2Fannounce&tr=udp%3A%2F%2Fopen.stealth.si%3A80%2Fannounce" --out downloads
+
+            - echo "📤 Uploading files to PixelDrain..."
             - |
-              cat << 'EOF' > upload_files.py
-              import os
-              import requests
-              import concurrent.futures
+              find downloads -type f | while read file; do
+                echo "Uploading $file..."
+                response=$(curl -s -T "$file" -u :6e534c16-ddd4-4e6d-993f-f185181e7538 https://pixeldrain.com/api/file/)
+                id=$(echo "$response" | grep -o '"id":"[^"]*"' | cut -d':' -f2 | tr -d '"')
+                echo "✅ $file uploaded: https://pixeldrain.com/u/$id"
+              done
 
-              # Folder containing downloaded files
-              directory = 'downloads'
-              url_template = 'https://filebin.net/wrjtapwqd8l93y8u/{filename}'  # Replace with your Filebin ID
-
-              # Recursively collect all file paths
-              files_to_upload = []
-              for root, dirs, files in os.walk(directory):
-                  for file in files:
-                      full_path = os.path.join(root, file)
-                      files_to_upload.append(full_path)
-
-              # Upload a single file
-              def upload_file(file_path):
-                  filename = os.path.relpath(file_path, directory)
-                  url = url_template.format(filename=filename.replace(os.sep, '_'))
-
-                  print(f'Uploading {filename} to {url}')
-                  try:
-                      with open(file_path, 'rb') as f:
-                          response = requests.post(
-                              url,
-                              headers={
-                                  'accept': 'application/json',
-                                  'Content-Type': 'application/octet-stream'
-                              },
-                              data=f
-                          )
-                      return response.status_code, filename, response.json()
-                  except Exception as e:
-                      return None, filename, str(e)
-
-              # Concurrent upload
-              with concurrent.futures.ThreadPoolExecutor() as executor:
-                  future_to_file = {executor.submit(upload_file, file): file for file in files_to_upload}
-                  for future in concurrent.futures.as_completed(future_to_file):
-                      try:
-                          status_code, filename, response_data = future.result()
-                          print(f'Uploaded {filename}: Status {status_code}, Response: {response_data}')
-                      except Exception as e:
-                          print(f'Error uploading {future_to_file[future]}: {e}')
-              EOF
-            - python3 upload_files.py
